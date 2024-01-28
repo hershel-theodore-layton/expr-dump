@@ -1,0 +1,28 @@
+{
+  "name": "hershel-theodore-layton/expr-dump",
+  "description": "Dump runtime values to typed static initializers.",
+  "license": "MIT",
+  "require": {
+    "hhvm": "^4.102",
+    "hershel-theodore-layton/type-visitor": "<1"
+  },
+  "require-dev": {
+    "hhvm/hhvm-autoload": "^3.2",
+    "hhvm/hhast": "^4.102",
+    "hhvm/hacktest": "^2.3",
+    "facebook/fbexpect": "^2.8"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "rm vendor/autoload.php vendor/composer/*.php"
+    ],
+    "post-update-cmd": [
+      "rm vendor/autoload.php vendor/composer/*.php"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "hhvm/hhvm-autoload": true
+    }
+  }
+}
