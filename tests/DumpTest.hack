@@ -187,7 +187,7 @@ final class DumpTest extends HackTest {
       static::createTestCase<dict<int, dynamic>>(dict[1 => 2], 'dict[1 => 2]'),
       static::createTestCase<vec<mixed>>(vec[1], 'vec[1]'),
       static::createTestCase<shape(...)>(shape('a' => 1), "shape('a' => 1)"),
-      static::createTestCase<vec<?nonnull>>(vec[6], 'vec[6]'),
+      static::createTestCase<(?nonnull)>(tuple(6), 'tuple(6)'),
     ];
   }
 
