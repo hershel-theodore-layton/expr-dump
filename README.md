@@ -1,38 +1,45 @@
 # expr-dump
 
-Dump runtime values to typed static initializers.
+Dump runtime values to typed Hack source code.
 
-## var_dump() for the era of Hack
+## Why do you need this?
 
-In Hack, the same runtime value can represent two separate types.
+You have data you need in your program that will not change between releases.
+All data that enters your program has the type `mixed`, therefore you must cast
+it to a typed value in order to process it. If you do this safely, this incurs
+runtime costs. Doing it using an unsafe mechanism, such as `HH\FIXME\UNSAFE_CAST`
+or `HH_FIXME[4110]` is trading correctness for performance. But what if the
+data was already part of your program, fully typed and ready to use?
 
 ```HACK
-final class X { const string CLASS_CONSTANT = 'name'; }
+const TheTypeYouNeed THE_DATA_YOU_NEED = /* embed the data here */;
+```
+
+## Why the existing tools can not meet this need
+
+In Hack, the same runtime value can represent two different types.
+
+```HACK
 shape('name' => 'value') === dict['name' => 'value']; // true
-shape('name' => 'value') === shape(X::CLASS_CONSTANT => 'value'); // true
+shape('name' => 'value') === shape(SomeClass::CLASS_CONSTANT => 'value'); // true
 vec[1, 2, 3] === tuple(1, 2, 3); // true
 6 === MyEnum::ENUMERATOR; // true
 ```
 
-This means that `\var_dump()` doesn't have enough information to accurately
-represent the complete type of the expression. The syntax from \var_dump()
-is also not something you can just embed into a Hack file.
+HHVM is unable to distinguish between these types, but Hack is, and will emit
+errors if you initialize a value with the wrong type, even if the runtime value
+would be exactly the same as the correct initializer.
+
+`const (int, int) A_TUPLE = vec[1, 2]; // type error`
 
 `ExprDump\dump<reify T>(T $value): string` takes a **type** _and a_ value.
 This gives it enough information to represent shapes as shapes, tuples as tuples,
 enums as enums, whilst not confusing them for dicts, vecs, and arraykeys.
 
-## Why do you need this?
-
-If you have runtime data that is not going to change, you can embed it
-into your Hack source code. This performs better than
-`json_decode_with_error()`'ing it on every request and you can skip
-asserting the type at runtime, or using type unsafe mechanisms.
-
 ## Usage
 
 ```HACK
-// var_dump() with Hack syntax, all type information is lost.
+// Like var_dump(), with Hack syntax, all type information is lost.
 //  - shapes become dicts
 //  - tuples become vecs
 //  - enums become ints / strings
@@ -63,7 +70,7 @@ ExprDump\dump<vec<Roles>>(
 // Keep class constant names in the dumped output.
 // shape(\SomeClass::CONSTANT => 1) instead of shape('val' => 1)
 ExprDump\dump<shape(SomeClass::CONSTANT => int)>(
-  shape(SomeClass::CONSTANT => 1),
+  $shape,
   shape(
     'shape_key_namer' => (
       ?string $_parent_shape_name,
@@ -72,7 +79,7 @@ ExprDump\dump<shape(SomeClass::CONSTANT => int)>(
       $prefix = '\\'.SomeClass::class.'::';
       return dict<arraykey, string>[
         SomeClass::CONSTANT => $prefix.'CONSTANT',
-      ][$key];
+      ][$key] ?? $key;
     },
   ),
 );
@@ -84,3 +91,16 @@ $dumper = ExprDump\create_dumper<SomeType>(shape(
 
 $dumper->dump($value_of_that_given_type);
 ```
+
+## Note about the stability of this api
+
+This library depends on [HTL\TypeVisitor](https://github.com/herhsel-theodore-layton/type-visitor)
+to provide its functionality. `TypeVisitor` depends on unstable Hack apis,
+`TypeStructure<T>` and `\HH\ReifiedGenerics\get_type_structure<T>()`. For more
+details, see [stability](https://github.com/herhsel-theodore-layton/type-visitor/README.md).
+This api has been unstable since 2016, so take this with a grain of salt.
+
+In order to minimize the potential impact of a removal of these apis, you should
+not use this library in places where the performance of bootstrapping the dumper
+is critical. A far less performant variant of `TypeVisitor` could be written, even
+without these api affordances.
