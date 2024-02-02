@@ -4,6 +4,9 @@ Dump runtime values to typed Hack source code.
 
 ## Why do you need this?
 
+Run code during build-time, codegen the values you were interested in back to
+Hack code, write it to a Hack source file, and you have build-time compute.
+
 You have data you need in your program that will not change between releases.
 All data that enters your program has the type `mixed`, therefore you must cast
 it to a typed value in order to process it. If you do this safely, this incurs
