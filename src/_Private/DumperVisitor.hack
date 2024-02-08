@@ -212,7 +212,7 @@ final class DumperVisitor
     vec<UntypedDumper> $elements,
   )[]: UntypedDumper {
     return $this->customDumperOrNull($alias, 'tuple') ??
-      new TupleDumper(Vec\map($elements, $e ==> WeakUntypedDumper::create($e)));
+      new TupleDumper(Vec\map($elements, WeakUntypedDumper::create<>));
   }
 
   public function vec(
@@ -254,7 +254,7 @@ final class DumperVisitor
 
     if ($alias['opaque']) {
       throw new \UnexpectedValueException(
-        'Missing custom dumper for: '.$alias['alias'],
+        'Missing custom dumper for: '.($alias['alias'] as string),
       );
     }
 

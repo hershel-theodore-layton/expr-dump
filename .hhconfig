@@ -9,4 +9,5 @@ allowed_fixme_codes_strict=2011,2049,2050,2053,2083,3084,4027,4045,4047,4104,410
 check_xhp_attribute = true
 disable_xhp_children_declarations=true
 disable_xhp_element_mangling=true
+enable_strict_string_concat_interp = true
 enable_xhp_class_modifier=true
