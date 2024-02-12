@@ -2,6 +2,13 @@
 namespace HTL\ExprDump\_Private;
 
 final class BestEffortDumper implements UntypedDumper {
+  // These fields are nullable, since they require `$this` to be constructed.
+  // Now that they are nullable, `$this` is considered to be fully constructed,
+  // before assigning them to `$this->dictDumper` etc.
+  // They will become nonnull after the constructor finishes.
+  // If they were notnullable, `$dict_factory($this)` would not typecheck.
+  // The initialization is not over because $this->dictDumper,
+  // can still potentially be null. Hack(3004)
   private ?UntypedDumper $dictDumper;
   private ?UntypedDumper $keysetDumper;
   private ?UntypedDumper $vecDumper;
