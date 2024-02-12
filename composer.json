@@ -14,10 +14,10 @@
   },
   "scripts": {
     "post-install-cmd": [
-      "rm vendor/autoload.php vendor/composer/*.php"
+      ".github/workflows/prepare-environment.sh"
     ],
     "post-update-cmd": [
-      "rm vendor/autoload.php vendor/composer/*.php"
+      ".github/workflows/prepare-environment.sh"
     ]
   },
   "config": {
