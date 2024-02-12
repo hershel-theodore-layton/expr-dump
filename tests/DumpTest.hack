@@ -181,6 +181,14 @@ final class DumpTest extends HackTest {
       ->toEqual('shape(\'str\' => 3)');
   }
 
+  public function test_undumpable_values_throw_an_exception(): void {
+    expect(() ==> ExprDump\dump<vec<mixed>>(vec[new \stdClass()]))
+      ->toThrow(
+        \UnexpectedValueException::class,
+        'Unable to dump type without specific instructions: stdClass',
+      );
+  }
+
   public function provideDumpersThatRequireKeepAlive(
   ): vec<(mixed, ExprDump\Dumper<nothing>, string)> {
     return vec[
