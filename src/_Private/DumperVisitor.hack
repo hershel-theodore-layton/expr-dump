@@ -229,7 +229,7 @@ final class DumperVisitor
   )[]: UntypedDumper {
     return $this->customDumperOrNull($alias, 'vec_or_dict') ??
       new VecOrDictDumper(
-        new VecDumper(WeakUntypedDumper::create($inner[0])),
+        new VecDumper(WeakUntypedDumper::create($inner[1])),
         new DictDumper(
           WeakUntypedDumper::create($inner[0]),
           WeakUntypedDumper::create($inner[1]),

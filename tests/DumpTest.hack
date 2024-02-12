@@ -100,9 +100,9 @@ final class DumpTest extends HackTest {
       ),
 
       // vec_or_dict picks either vec or dict, depending on the runtime value.
-      static::createTestCase<vec<vec_or_dict<int, int>>>(
-        vec[dict[1 => 3], vec[6]],
-        'vec[dict[1 => 3], vec[6]]',
+      static::createTestCase<vec<vec_or_dict<int, string>>>(
+        vec[dict[1 => '3'], vec['6']],
+        "vec[dict[1 => '3'], vec['6']]",
       ),
 
       // Putting it all together, mostly checking for recursively correct stuff.
