@@ -21,6 +21,9 @@ final class ShapeDumper implements UntypedDumper {
         return $name ?? $this->inner->dump($k);
       }
 
+      // HHVM 4.102 doesn't understand.
+      $k as int;
+
       throw new \UnexpectedValueException(Str\format(
         'The key %d in shape() [%s] has type int '.
         'and the shape namer did not resolve to a class constant. '.

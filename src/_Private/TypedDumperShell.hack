@@ -1,7 +1,6 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\_Private;
 
-use type HH\Lib\Ref;
 use namespace HTL\ExprDump;
 
 final class TypedDumperShell<T> implements ExprDump\Dumper<T> {

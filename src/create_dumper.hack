@@ -1,7 +1,6 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump;
 
-use type HH\Lib\Ref;
 use namespace HH\Lib\Dict;
 use namespace HTL\TypeVisitor;
 
@@ -26,6 +25,6 @@ function create_dumper<reify T>(DumpOptions $options)[]: Dumper<T> {
   ))
     |> new _Private\TypedDumperShell(
       $$,
-      new Ref($dumper_to_use_for_untyped_values),
+      new _Private\Ref($dumper_to_use_for_untyped_values),
     );
 }

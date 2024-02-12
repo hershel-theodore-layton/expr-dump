@@ -192,7 +192,7 @@ final class DumpTest extends HackTest {
   public function provideDumpersThatRequireKeepAlive(
   ): vec<(mixed, ExprDump\Dumper<nothing>, string)> {
     return vec[
-      static::createTestCase<dict<int, dynamic>>(dict[1 => 2], 'dict[1 => 2]'),
+      static::createTestCase<dict<int, dynamic>>(dict[1 => 2 as dynamic], 'dict[1 => 2]'),
       static::createTestCase<vec<mixed>>(vec[1], 'vec[1]'),
       static::createTestCase<shape(...)>(shape('a' => 1), "shape('a' => 1)"),
       static::createTestCase<(?nonnull)>(tuple(6), 'tuple(6)'),

@@ -9,7 +9,7 @@ final class FloatDumper implements UntypedDumper {
   public function dump(mixed $value)[]: string {
     $value as float;
 
-    if (Math\is_nan($value)) {
+    if (\is_nan($value)) {
       return '\NAN';
     }
 
