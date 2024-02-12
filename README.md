@@ -82,7 +82,7 @@ ExprDump\dump<shape(SomeClass::CONSTANT => int)>(
       $prefix = '\\'.SomeClass::class.'::';
       return dict<arraykey, string>[
         SomeClass::CONSTANT => $prefix.'CONSTANT',
-      ][$key] ?? $key;
+      ][$key] ?? null;
     },
   ),
 );
