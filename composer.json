@@ -1,6 +1,6 @@
 {
   "name": "hershel-theodore-layton/expr-dump",
-  "description": "Dump runtime values to typed static initializers.",
+  "description": "Dump runtime values to typed Hack source code.",
   "license": "MIT",
   "require": {
     "hhvm": "^4.102",
