@@ -12,11 +12,11 @@ final class TupleDumper implements UntypedDumper {
     if (!\HH\is_vec_or_varray($value)) {
       // Fail with a TypeAssertionException:
       // expected AVecOrAVarrayDependingOnYourHHVMVersion; got ???.
-      // Csting to any tuple type, f.e. `(int, int)` would be confusing.
+      // Casting to any tuple type, f.e. `(int, int)` would be confusing.
       $value as AVecOrAVarrayDependingOnYourHHVMVersion;
       invariant_violation(
         'Typechecker thinks this cast might succeed. '.
-        'There is no platform where it will, vec(tuple(...)) is disallowed. '.
+        'There is no platform where it will, vec(object-type) is disallowed. '.
         'By placing this invariant_violation here I assure the typechecker.',
       );
     }
