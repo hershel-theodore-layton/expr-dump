@@ -40,8 +40,19 @@ final class ShapeDumper implements UntypedDumper {
       shape('dumper' => $this->inner),
     )['dumper']->dump($v);
 
+    if (!\HH\is_dict_or_darray($value)) {
+      // Fail with a TypeAssertionException:
+      // expected shape(...) got ??? on all supported platforms.
+      $value as shape(...);
+      invariant_violation(
+        'Typechecker thinks this cast might succeed. '.
+        'There is no platform where it will, dict(shape(...)) is disallowed. '.
+        'By placing this invariant_violation here I assure the typechecker.',
+      );
+    }
+
     return Vec\map_with_key(
-      $value as dict<_, _>,
+      dict($value as KeyedContainer<_, _>),
       ($k, $v) ==> $create_key($k).' => '.$dump_value($k, $v),
     )
       |> Str\join($$, ', ')

@@ -93,6 +93,8 @@ final class DumpTest extends HackTest {
         "shape('pos' => dict['x' => 1, 'y' => 2])",
       ),
 
+      static::createTestCase<(int, int)>(tuple(1, 1), 'tuple(1, 1)'),
+
       // Tuples are not just vecs...
       static::createTestCase<(?int, ?string, arraykey, num, null)>(
         tuple(1, null, 'example', 4.2, null),
@@ -178,7 +180,7 @@ final class DumpTest extends HackTest {
   public function test_class_constant_with_string_value_decays_silently(
   ): void {
     expect(ExprDump\dump<shape(...)>(shape(MyClass::SOME_STRING_CONSTANT => 3)))
-      ->toEqual('shape(\'str\' => 3)');
+      ->toEqual("shape('str' => 3)");
   }
 
   public function test_undumpable_values_throw_an_exception(): void {
@@ -192,7 +194,10 @@ final class DumpTest extends HackTest {
   public function provideDumpersThatRequireKeepAlive(
   ): vec<(mixed, ExprDump\Dumper<nothing>, string)> {
     return vec[
-      static::createTestCase<dict<int, dynamic>>(dict[1 => 2 as dynamic], 'dict[1 => 2]'),
+      static::createTestCase<dict<int, dynamic>>(
+        dict[1 => 2 as dynamic],
+        'dict[1 => 2]',
+      ),
       static::createTestCase<vec<mixed>>(vec[1], 'vec[1]'),
       static::createTestCase<shape(...)>(shape('a' => 1), "shape('a' => 1)"),
       static::createTestCase<(?nonnull)>(tuple(6), 'tuple(6)'),

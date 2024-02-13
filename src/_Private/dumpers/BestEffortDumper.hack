@@ -39,11 +39,11 @@ final class BestEffortDumper implements UntypedDumper {
       return $this->stringDumper->dump($value);
     } else if ($value is null) {
       return $this->nullDumper->dump($value);
-    } else if ($value is dict<_, _>) {
+    } else if (\HH\is_dict_or_darray($value)) {
       return $this->dictDumper as nonnull->dump($value);
     } else if ($value is keyset<_>) {
       return $this->keysetDumper as nonnull->dump($value);
-    } else if ($value is vec<_>) {
+    } else if (\HH\is_vec_or_varray($value)) {
       return $this->vecDumper as nonnull->dump($value);
     }
 
