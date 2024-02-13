@@ -7,16 +7,31 @@ Dump runtime values to typed Hack source code.
 Run code during build-time, codegen the values you were interested in back to
 Hack code, write it to a Hack source file, and you have build-time compute.
 
-You have data you need in your program that will not change between releases.
-All data that enters your program has the type `mixed`, therefore you must cast
-it to a typed value in order to process it. If you do this safely, this incurs
-runtime costs. Doing it using an unsafe mechanism, such as `HH\FIXME\UNSAFE_CAST`
-or `HH_FIXME[4110]` is trading correctness for performance. But what if the
-data was already part of your program, fully typed and ready to use?
 
+The following snippet[^1] embodies the essence of this library perfectly.
 ```HACK
-const TheTypeYouNeed THE_DATA_YOU_NEED = /* embed the data here */;
+function burn_a_value_to_constant<reify T>(
+  string $constant_name,
+  T $value,
+  ExprDump\DumpOptions $dumper_options = shape(),
+)[]: string {
+  $type_name = TypeVisitor\visit<T, _, _>(new TypeVisitor\TypenameVisitor());
+  $serialized_value = ExprDump\dump<T>($value, $dumper_options);
+  return Str\format(
+    'const %s %s = %s;',
+    $type_name,
+    $constant_name,
+    $serialized_value,
+  );
+}
 ```
+
+All data that enters your program at runtime is typed as `mixed`, which is why
+you must cast it to a typed value in order to process it. If you do this safely,
+this incurs runtime costs. Doing it using an unsafe mechanism, such as
+`HH\FIXME\UNSAFE_CAST` or `HH_FIXME[4110]` is trading correctness for performance.
+But with `burn_a_value_to_constant`, the data doesn't enter the program at runtime.
+This data is already typed, so there is no need for casting.
 
 ## Why the existing tools can not meet this need
 
@@ -107,3 +122,8 @@ In order to minimize the potential impact of a removal of these apis, you should
 not use this library in places where the performance of bootstrapping the dumper
 is critical. A far less performant variant of `TypeVisitor` could be written, even
 without these api affordances.
+
+[^1]: This snippet `burn_a_value_to_constant` is excempt from the MIT license
+of this library. It is licensed to you under MIT-0 (MIT No Attribution).
+This excemption does not apply to the code called by this snippet. The MIT
+license still covers all other parts of this program.
