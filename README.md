@@ -115,7 +115,7 @@ $dumper->dump($value_of_that_given_type);
 This library depends on [HTL\TypeVisitor](https://github.com/herhsel-theodore-layton/type-visitor)
 to provide its functionality. `TypeVisitor` depends on unstable Hack apis,
 `TypeStructure<T>` and `\HH\ReifiedGenerics\get_type_structure<T>()`. For more
-details, see [stability](https://github.com/herhsel-theodore-layton/type-visitor/README.md).
+details, see [stability](https://github.com/hershel-theodore-layton/type-visitor/blob/master/README.md).
 This api has been unstable since 2016, so take this with a grain of salt.
 
 In order to minimize the potential impact of a removal of these apis, you should
