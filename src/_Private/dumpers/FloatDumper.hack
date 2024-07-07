@@ -1,8 +1,6 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\_Private;
 
-use namespace HH\Lib\Math;
-
 final class FloatDumper implements UntypedDumper {
   use BecomeAStrongRef, SingletonDumper;
 
