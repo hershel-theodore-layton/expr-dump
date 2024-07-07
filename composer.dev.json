@@ -9,7 +9,8 @@
   "require-dev": {
     "hhvm/hhvm-autoload": "^3.2",
     "hhvm/hacktest": "^2.3",
-    "facebook/fbexpect": "^2.8"
+    "facebook/fbexpect": "^2.8",
+    "hershel-theodore-layton/portable-hack-ast-linters-server": "<1"
   },
   "scripts": {
     "post-install-cmd": [

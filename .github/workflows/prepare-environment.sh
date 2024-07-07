@@ -20,7 +20,7 @@ NEXT=$(($HHVM_VERSION_MINOR + 1))
 # "requires:4.103|requires:4.104|...|requires:4.128|...|requires:4.172"
 # Since `requires:4.128` is part of the regex, the hhconfig file stops there.
 # On hhvm 4.128, the expression would be "requires:4.129|...|requires:4.172".
-# Since `requires:4.129` is not part of the regex, the requires directive is ignored.
+# Since `requires:4.128` is not part of the regex, the requires directive is ignored.
 
 FUTURE_VERSIONS=`for i in $(seq $NEXT 172); do echo "requires:4.$i"; done`
 FUTURE_VERSIONS=`echo $FUTURE_VERSIONS | sed "s/ /|/g"`

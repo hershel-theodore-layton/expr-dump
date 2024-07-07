@@ -1,3 +1,7 @@
+# Copyright (c) 2024, Hershel Theodore Layton
+# Copies of this file can be made, with or without changes,
+# under the terms of the MIT-0 license.
+
 name: Continuous Integration
 on:
   push:
@@ -7,23 +11,23 @@ on:
     - cron: '14 18 * * *'
 jobs:
   build:
-    name: HHVM ${{matrix.hhvm}} - ${{matrix.os}}
+    name: HHVM ${{matrix.hhvm}}
     strategy:
-      # Run tests on all OS's and HHVM versions, even if one fails
       fail-fast: false
       matrix:
-        os: [ ubuntu ]
         hhvm:
-          - '4.102'
-          - '4.128'
-          - '4.153'
-          - '4.168'
-    runs-on: ${{matrix.os}}-20.04
+          - "4.102"
+          - "4.128"
+          - "4.153"
+          - "4.168"
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Create branch for version alias
         run: git checkout -b CI_current_pull_request
-      - uses: hhvm/actions/hack-lint-test@master
+      - uses: hershel-theodore-layton/actions/hack-lint-test@master
         with:
           hhvm: ${{matrix.hhvm}}
-          skip_lint: ${{ matrix.hhvm != 'latest' }}
+          hhvm_flags: -dhhvm.autoload.enabled=true -dhhvm.autoload.db.path=.var/facts-%{euid}-%{schema}.db
+          skip_lint: ${{matrix.hhvm == '4.102'}}
+          lint_engine: pha
