@@ -2,4 +2,5 @@
 tests/ export-ignore
 .hhconfig export-ignore
 .hhvmconfig.hdf export-ignore
-hhast-lint.json export-ignore
+composer.dev.json export-ignore
+composer.4.102.json export-ignore
