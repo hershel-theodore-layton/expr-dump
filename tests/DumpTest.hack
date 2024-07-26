@@ -10,7 +10,8 @@ final class DumpTest extends HackTest {
   private static ?ExprDump\DumpOptions $options;
 
   <<__Override>>
-  public static async function beforeFirstTestAsync(): Awaitable<void> {
+  public static async function beforeFirstTestAsync(
+  )[globals]: Awaitable<void> {
     static::$options = shape(
       'custom_dumpers' => dict[
         'bool' => ($v)[] ==> 'intercepted('.($v as bool ? 'true' : 'false').')',
@@ -33,7 +34,7 @@ final class DumpTest extends HackTest {
   }
 
   public function provideTestCases(
-  ): vec<(mixed, ExprDump\Dumper<nothing>, string)> {
+  )[defaults]: vec<(mixed, ExprDump\Dumper<nothing>, string)> {
     return vec[
       // Simple, but with bool intercepted via the custom_dumpers.
       static::createTestCase<vec<mixed>>(
@@ -143,25 +144,26 @@ final class DumpTest extends HackTest {
     T $value,
     ExprDump\Dumper<T> $dumper,
     string $expected,
-  ): void {
+  )[defaults]: void {
     expect($dumper->dump($value))->toEqual($expected);
   }
 
-  public function test_enum_not_provided(): void {
+  public function test_enum_not_provided()[defaults]: void {
     expect(() ==> ExprDump\create_dumper<MyEnum>(shape()))->toThrow(
       \UnexpectedValueException::class,
       'Missing enum definition for: HTL\\ExprDump\\Tests\\MyEnum',
     );
   }
 
-  public function test_newtype_not_provided(): void {
+  public function test_newtype_not_provided()[defaults]: void {
     expect(() ==> ExprDump\create_dumper<MyOpaqueInt>(shape()))->toThrow(
       \UnexpectedValueException::class,
       'Missing custom dumper for: HTL\\ExprDump\\Tests\\MyOpaqueInt',
     );
   }
 
-  public function test_class_constant_with_int_value_must_be_named(): void {
+  public function test_class_constant_with_int_value_must_be_named(
+  )[defaults]: void {
     expect(() ==> ExprDump\dump<shape(...)>(shape(MyClass::SOME_CONSTANT => 3)))
       ->toThrow(
         \UnexpectedValueException::class,
@@ -178,12 +180,12 @@ final class DumpTest extends HackTest {
   }
 
   public function test_class_constant_with_string_value_decays_silently(
-  ): void {
+  )[defaults]: void {
     expect(ExprDump\dump<shape(...)>(shape(MyClass::SOME_STRING_CONSTANT => 3)))
       ->toEqual("shape('str' => 3)");
   }
 
-  public function test_undumpable_values_throw_an_exception(): void {
+  public function test_undumpable_values_throw_an_exception()[defaults]: void {
     expect(() ==> ExprDump\dump<vec<mixed>>(vec[new \stdClass()]))
       ->toThrow(
         \UnexpectedValueException::class,
@@ -192,7 +194,7 @@ final class DumpTest extends HackTest {
   }
 
   public function provideDumpersThatRequireKeepAlive(
-  ): vec<(mixed, ExprDump\Dumper<nothing>, string)> {
+  )[defaults]: vec<(mixed, ExprDump\Dumper<nothing>, string)> {
     return vec[
       static::createTestCase<dict<int, dynamic>>(
         dict[1 => 2 as dynamic],
@@ -209,7 +211,7 @@ final class DumpTest extends HackTest {
     T $value,
     ExprDump\Dumper<T> $dumper,
     string $expected,
-  ): void {
+  )[defaults]: void {
     expect($dumper->dump($value))->toEqual($expected);
 
     // This method is not available on the TypedDumper interface.
@@ -231,7 +233,7 @@ final class DumpTest extends HackTest {
   private static function createTestCase<reify T>(
     T $expression,
     string $expected,
-  ): (T, ExprDump\Dumper<T>, string) {
+  )[defaults]: (T, ExprDump\Dumper<T>, string) {
     return tuple(
       $expression,
       ExprDump\create_dumper<T>(static::$options as nonnull),
