@@ -11,7 +11,7 @@ final class DumpTest extends HackTest {
 
   <<__Override>>
   public static async function beforeFirstTestAsync(
-  )[globals]: Awaitable<void> {
+  )[defaults]: Awaitable<void> {
     static::$options = shape(
       'custom_dumpers' => dict[
         'bool' => ($v)[] ==> 'intercepted('.($v as bool ? 'true' : 'false').')',
