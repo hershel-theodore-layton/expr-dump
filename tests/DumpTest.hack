@@ -82,6 +82,7 @@ final class DumpTest extends HackTest {
         ?'optional' => int,
         'nullable' => ?int,
         ?'illusive' => ?int,
+        /*_*/
       )>(
         shape('required' => 1, 'nullable' => null, 'illusive' => 3),
         "shape('required' => 1, 'nullable' => null, 'illusive' => 3)",
@@ -115,7 +116,8 @@ final class DumpTest extends HackTest {
         'vec' => vec<MyOpaqueInt>,
         'tuple' => (mixed, MyOpaqueInt),
         'nesting_galore' =>
-          (shape('deeper' => vec<dict<string, (keyset<MyEnum>)>>)),
+          (shape('deeper' => vec<dict<string, (keyset<MyEnum>)>>/*_*/)),
+        /*_*/
       )>(
         shape(
           'dict' => dict[MyEnum::ONE_STR => opaque_int(5)],

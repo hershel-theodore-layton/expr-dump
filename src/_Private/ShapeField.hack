@@ -4,4 +4,5 @@ namespace HTL\ExprDump\_Private;
 type ShapeField = shape(
   'dumper' => WeakUntypedDumper,
   'runtime_value' => arraykey,
+  /*_*/
 );
