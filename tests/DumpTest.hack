@@ -1,6 +1,7 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\Tests;
 
+use namespace HH\Lib\Str;
 use namespace HTL\ExprDump;
 use namespace HTL\ExprDump\_Private;
 use type Facebook\HackTest\{DataProvider, HackTest};
@@ -147,7 +148,9 @@ final class DumpTest extends HackTest {
     ExprDump\Dumper<T> $dumper,
     string $expected,
   )[defaults]: void {
-    expect($dumper->dump($value))->toEqual($expected);
+    expect($dumper->dump($value) |> Str\replace($$, "\n", ''))->toEqual(
+      $expected,
+    );
   }
 
   public function test_enum_not_provided()[defaults]: void {

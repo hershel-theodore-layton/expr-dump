@@ -16,7 +16,7 @@ final class VecDumper implements UntypedDumper {
     }
 
     return Vec\map(vec($value as Container<_>), $v ==> $this->inner->dump($v))
-      |> Str\join($$, ', ')
+      |> Str\join($$, ", \n")
       |> 'vec['.$$.']';
   }
 }

@@ -23,7 +23,7 @@ final class DictDumper implements UntypedDumper {
       ($k, $v) ==>
         $this->keyDumper->dump($k).' => '.$this->valueDumper->dump($v),
     )
-      |> Str\join($$, ', ')
+      |> Str\join($$, ", \n")
       |> 'dict['.$$.']';
   }
 }

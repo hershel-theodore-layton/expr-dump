@@ -55,7 +55,7 @@ final class ShapeDumper implements UntypedDumper {
       dict($value as KeyedContainer<_, _>),
       ($k, $v) ==> $create_key($k).' => '.$dump_value($k, $v),
     )
-      |> Str\join($$, ', ')
+      |> Str\join($$, ", \n")
       |> 'shape('.$$.')';
   }
 }
