@@ -21,11 +21,15 @@ jobs:
           - "4.128"
           - "4.153"
           - "4.168"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
+    container:
+      image: hhvm/hhvm:${{matrix.hhvm}}-latest
     steps:
       - uses: actions/checkout@v2
       - name: Create branch for version alias
-        run: git checkout -b CI_current_pull_request
+        run: |
+          git config --global --add safe.directory $(pwd)
+          git checkout -b CI_current_pull_request
       - uses: hershel-theodore-layton/actions/hack-lint-test@master
         with:
           hhvm: ${{matrix.hhvm}}

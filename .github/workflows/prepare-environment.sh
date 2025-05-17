@@ -1,5 +1,5 @@
 #!/bin/sh
-rm vendor/autoload.php vendor/composer/*.php
+rm vendor/composer/*.php
 
 # Processes the `requires:4.128` comments in .hhconfig.
 
