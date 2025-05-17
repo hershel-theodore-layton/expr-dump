@@ -9,7 +9,7 @@
   "require-dev": {
     "hhvm/hhvm-autoload": "^3.2",
     "hhvm/hacktest": "^2.3",
-    "facebook/fbexpect": "^2.8"
+    "hershel-theodore-layton/expect": "dev-master"
   },
   "scripts": {
     "post-install-cmd": [

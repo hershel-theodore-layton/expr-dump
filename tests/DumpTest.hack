@@ -5,7 +5,7 @@ use namespace HH\Lib\Str;
 use namespace HTL\ExprDump;
 use namespace HTL\ExprDump\_Private;
 use type Facebook\HackTest\{DataProvider, HackTest};
-use function Facebook\FBExpect\expect;
+use function HTL\Expect\{expect, expect_invoked};
 
 final class DumpTest extends HackTest {
   private static ?ExprDump\DumpOptions $options;
@@ -154,31 +154,33 @@ final class DumpTest extends HackTest {
   }
 
   public function test_enum_not_provided()[defaults]: void {
-    expect(() ==> ExprDump\create_dumper<MyEnum>(shape()))->toThrow(
-      \UnexpectedValueException::class,
-      'Missing enum definition for: HTL\\ExprDump\\Tests\\MyEnum',
-    );
+    expect_invoked(() ==> ExprDump\create_dumper<MyEnum>(shape()))
+      ->toHaveThrown<\UnexpectedValueException>(
+        'Missing enum definition for: HTL\\ExprDump\\Tests\\MyEnum',
+      );
   }
 
   public function test_newtype_not_provided()[defaults]: void {
-    expect(() ==> ExprDump\create_dumper<MyOpaqueInt>(shape()))->toThrow(
-      \UnexpectedValueException::class,
-      'Missing custom dumper for: HTL\\ExprDump\\Tests\\MyOpaqueInt',
-    );
+    expect_invoked(() ==> ExprDump\create_dumper<MyOpaqueInt>(shape()))
+      ->toHaveThrown<\UnexpectedValueException>(
+        'Missing custom dumper for: HTL\\ExprDump\\Tests\\MyOpaqueInt',
+      );
   }
 
   public function test_class_constant_with_int_value_must_be_named(
   )[defaults]: void {
-    expect(() ==> ExprDump\dump<shape(...)>(shape(MyClass::SOME_CONSTANT => 3)))
-      ->toThrow(
-        \UnexpectedValueException::class,
+    expect_invoked(
+      () ==> ExprDump\dump<shape(...)>(shape(MyClass::SOME_CONSTANT => 3)),
+    )
+      ->toHaveThrown<\UnexpectedValueException>(
         'The key 1 in shape() [<unnamed-shape>] has type int '.
         'and the shape namer did not resolve to a class constant.',
       );
 
-    expect(() ==> ExprDump\dump<OpenShape>(shape(MyClass::SOME_CONSTANT => 3)))
-      ->toThrow(
-        \UnexpectedValueException::class,
+    expect_invoked(
+      () ==> ExprDump\dump<OpenShape>(shape(MyClass::SOME_CONSTANT => 3)),
+    )
+      ->toHaveThrown<\UnexpectedValueException>(
         'The key 1 in shape() [HTL\\ExprDump\\Tests\\OpenShape] has type int '.
         'and the shape namer did not resolve to a class constant.',
       );
@@ -191,9 +193,8 @@ final class DumpTest extends HackTest {
   }
 
   public function test_undumpable_values_throw_an_exception()[defaults]: void {
-    expect(() ==> ExprDump\dump<vec<mixed>>(vec[new \stdClass()]))
-      ->toThrow(
-        \UnexpectedValueException::class,
+    expect_invoked(() ==> ExprDump\dump<vec<mixed>>(vec[new \stdClass()]))
+      ->toHaveThrown<\UnexpectedValueException>(
         'Unable to dump type without specific instructions: stdClass',
       );
   }
@@ -229,8 +230,9 @@ final class DumpTest extends HackTest {
     // it expected to the WeakRef to still be alive for as long as it is reachable.
     // This should never happen, expect for when you mess in the internals.
     $dumper->dropTheReferenceToTheDumperForUntypedValues__DO_NOT_USE();
-    expect(() ==> $dumper->dump($value))->toThrow(
-      InvariantException::class,
+    expect_invoked(() ==> $dumper->dump($value))->toHaveThrown<
+      InvariantException,
+    >(
       'This HTL\\ExprDump\\_Private\\WeakUntypedDumper should have still been alive.',
     );
   }
