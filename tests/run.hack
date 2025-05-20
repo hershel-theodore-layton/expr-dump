@@ -1,4 +1,4 @@
-/** This project is unlicensed. No license has been granted. */
+/** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\Project_GnDe82S9ecSl\GeneratedTestChain;
 
 use namespace HH;
