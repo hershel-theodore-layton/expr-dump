@@ -1,0 +1,7 @@
+{
+    "chain_path": "test-chain/chain.hack",
+    "codegen_namespace": "HTL\\Project_GnDe82S9ecSl\\GeneratedTestChain",
+    "license_comment": "/** expr-dump is MIT licensed, see /LICENSE. */",
+    "run_file": "run.hack",
+    "test_dir": "tests"
+}

@@ -16,6 +16,10 @@ final class TypedDumperShell<T> implements ExprDump\Dumper<T> {
     return $this->inner->dump($value);
   }
 
+  public function dumpUntypedForUnitTest__DO_NOT_USE(mixed $value)[]: string {
+    return $this->inner->dump($value);
+  }
+
   public function dropTheReferenceToTheDumperForUntypedValues__DO_NOT_USE(
   )[write_props]: void {
     $this->keepMeAlive = new Ref($this->inner);
