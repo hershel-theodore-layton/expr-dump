@@ -5,6 +5,8 @@ use namespace HH;
 use namespace HH\Lib\{IO, Vec};
 use namespace HTL\TestChain;
 
+// The initial stub was generated with vendor/bin/test-chain.
+// It is now yours to edit and customize.
 <<__DynamicallyCallable, __EntryPoint>>
 async function run_tests_async()[defaults]: Awaitable<void> {
   $_argv = HH\global_get('argv') as Container<_>
