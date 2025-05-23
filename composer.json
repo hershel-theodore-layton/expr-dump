@@ -7,7 +7,6 @@
     "hershel-theodore-layton/type-visitor": "^1"
   },
   "require-dev": {
-    "hhvm/hhvm-autoload": "^3.2",
     "hershel-theodore-layton/test-chain": "dev-master",
     "hershel-theodore-layton/expect": "dev-master"
   },
