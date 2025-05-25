@@ -1,6 +1,8 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\_Private;
 
+use namespace HTL\HH4Shim;
+
 final class BestEffortDumper implements UntypedDumper {
   // These fields are nullable, since they require `$this` to be constructed.
   // Now that they are nullable, `$this` is considered to be fully constructed,
@@ -39,11 +41,11 @@ final class BestEffortDumper implements UntypedDumper {
       return $this->stringDumper->dump($value);
     } else if ($value is null) {
       return $this->nullDumper->dump($value);
-    } else if (\HH\is_dict_or_darray($value)) {
+    } else if (HH4Shim\is_dictish($value)) {
       return $this->dictDumper as nonnull->dump($value);
     } else if ($value is keyset<_>) {
       return $this->keysetDumper as nonnull->dump($value);
-    } else if (\HH\is_vec_or_varray($value)) {
+    } else if (HH4Shim\is_vecish($value)) {
       return $this->vecDumper as nonnull->dump($value);
     }
 

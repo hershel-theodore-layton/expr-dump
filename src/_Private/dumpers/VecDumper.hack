@@ -2,6 +2,7 @@
 namespace HTL\ExprDump\_Private;
 
 use namespace HH\Lib\{Str, Vec};
+use namespace HTL\HH4Shim;
 
 final class VecDumper implements UntypedDumper {
   use BecomeAStrongRef;
@@ -9,7 +10,7 @@ final class VecDumper implements UntypedDumper {
   public function __construct(private WeakUntypedDumper $inner)[] {}
 
   public function dump(mixed $value)[]: string {
-    if (!\HH\is_vec_or_varray($value)) {
+    if (!HH4Shim\is_vecish($value)) {
       // Fail with a TypeAssertionException:
       // expected vec<_> got ??? on all supported platforms.
       $value as vec<_>;

@@ -238,7 +238,7 @@ function create_test_case<reify T>(
 )[]: (T, ExprDump\Dumper<T>, string) {
   return tuple(
     $expression,
-    ExprDump\create_dumper<T>($options as nonnull),
+    ExprDump\create_dumper<T>($options),
     $expected,
   );
 }

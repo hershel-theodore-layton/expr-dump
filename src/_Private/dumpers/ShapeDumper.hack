@@ -2,6 +2,7 @@
 namespace HTL\ExprDump\_Private;
 
 use namespace HH\Lib\{Str, Vec};
+use namespace HTL\HH4Shim;
 
 final class ShapeDumper implements UntypedDumper {
   use BecomeAStrongRef;
@@ -22,7 +23,7 @@ final class ShapeDumper implements UntypedDumper {
       }
 
       // HHVM 4.102 doesn't understand.
-      $k as int;
+      $k = HH4Shim\to_mixed($k) as int;
 
       throw new \UnexpectedValueException(Str\format(
         'The key %d in shape() [%s] has type int '.
@@ -40,7 +41,7 @@ final class ShapeDumper implements UntypedDumper {
       shape('dumper' => $this->inner),
     )['dumper']->dump($v);
 
-    if (!\HH\is_dict_or_darray($value)) {
+    if (!HH4Shim\is_dictish($value)) {
       // Fail with a TypeAssertionException:
       // expected shape(...) got ??? on all supported platforms.
       $value as shape(...);
