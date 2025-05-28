@@ -4,7 +4,7 @@
   "license": "MIT",
   "require": {
     "hhvm": ">=4.102",
-    "hershel-theodore-layton/hhvm-four-shim": "^1",
+    "hershel-theodore-layton/hhvm-four-shim": "<1",
     "hershel-theodore-layton/type-visitor": "^1"
   },
   "require-dev": {
