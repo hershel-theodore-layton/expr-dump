@@ -1,0 +1,12 @@
+services:
+  hhvm:
+    container_name: theodore-expr-dump-container
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: .
+        target: /mnt/project
+    ports:
+      - 48546:10641
