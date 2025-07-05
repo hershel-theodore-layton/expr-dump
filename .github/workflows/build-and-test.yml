@@ -21,6 +21,7 @@ jobs:
           - "4.153"
           - "4.168"
           - "25.6.0"
+          - "25.7.0"
     runs-on: ubuntu-24.04
     container:
       image: ${{ startsWith(matrix.hhvm, '4') && format('hhvm/hhvm:{0}-latest', matrix.hhvm) || format('hersheltheodorelayton/hhvm-full:{0}', matrix.hhvm) }}
