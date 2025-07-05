@@ -11,11 +11,11 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
   $options = shape(
     'custom_dumpers' => dict[
       'bool' => ($v)[] ==> 'intercepted('.($v as bool ? 'true' : 'false').')',
-      MyOpaqueInt::class => ($v)[] ==> 'opaque_int('.$v as int.')',
+      (string)MyOpaqueInt::class => ($v)[] ==> 'opaque_int('.$v as int.')',
     ],
     'enum_definitions' => vec[ExprDump\EnumDefinition::create(MyEnum::class)],
     'shape_key_namer' => ($parent, $key)[] ==> {
-      $const = '\\'.MyClass::class.'::';
+      $const = '\\'.(string)MyClass::class.'::';
 
       if ($parent === MyShape::class) {
         return dict<arraykey, string>[
@@ -236,9 +236,5 @@ function create_test_case<reify T>(
   T $expression,
   string $expected,
 )[]: (T, ExprDump\Dumper<T>, string) {
-  return tuple(
-    $expression,
-    ExprDump\create_dumper<T>($options),
-    $expected,
-  );
+  return tuple($expression, ExprDump\create_dumper<T>($options), $expected);
 }
