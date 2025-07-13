@@ -10,8 +10,8 @@
   "require-dev": {
     "hhvm/hhvm-autoload": "^3.2",
     "hhvm/hsl-experimental": "^4",
-    "hershel-theodore-layton/test-chain": "dev-master",
-    "hershel-theodore-layton/expect": "dev-master"
+    "hershel-theodore-layton/test-chain": "<1",
+    "hershel-theodore-layton/expect": "<1"
   },
   "scripts": {
     "post-install-cmd": [".github/workflows/prepare-environment.sh"],
