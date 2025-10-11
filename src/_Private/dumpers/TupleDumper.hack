@@ -2,7 +2,6 @@
 namespace HTL\ExprDump\_Private;
 
 use namespace HH\Lib\{C, Str, Vec};
-use namespace HTL\HH4Shim;
 
 final class TupleDumper implements UntypedDumper {
   use BecomeAStrongRef;
@@ -10,19 +9,7 @@ final class TupleDumper implements UntypedDumper {
   public function __construct(private vec<WeakUntypedDumper> $elements)[] {}
 
   public function dump(mixed $value)[]: string {
-    if (!HH4Shim\is_vecish($value)) {
-      // Fail with a TypeAssertionException:
-      // expected AVecOrAVarrayDependingOnYourHHVMVersion; got ???.
-      // Casting to any tuple type, f.e. `(int, int)` would be confusing.
-      $value as AVecOrAVarrayDependingOnYourHHVMVersion;
-      invariant_violation(
-        'Typechecker thinks this cast might succeed. '.
-        'There is no platform where it will, vec(object-type) is disallowed. '.
-        'By placing this invariant_violation here I assure the typechecker.',
-      );
-    }
-
-    $value = vec($value as Container<_>);
+    $value as vec<_>;
 
     $value_count = C\count($value);
     $element_count = C\count($this->elements);

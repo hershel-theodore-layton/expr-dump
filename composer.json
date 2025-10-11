@@ -3,25 +3,12 @@
   "description": "Dump runtime values to typed Hack source code.",
   "license": "MIT",
   "require": {
-    "hhvm": ">=4.102",
-    "hershel-theodore-layton/hhvm-four-shim": "<1",
+    "hhvm": ">=4.153",
     "hershel-theodore-layton/type-visitor": "^1"
   },
   "require-dev": {
     "hershel-theodore-layton/test-chain": "<1",
-    "hershel-theodore-layton/expect": "<1"
-  },
-  "scripts": {
-    "post-install-cmd": [
-      ".github/workflows/prepare-environment.sh"
-    ],
-    "post-update-cmd": [
-      ".github/workflows/prepare-environment.sh"
-    ]
-  },
-  "config": {
-    "allow-plugins": {
-      "hhvm/hhvm-autoload": true
-    }
+    "hershel-theodore-layton/expect": "<1",
+    "hershel-theodore-layton/portable-hack-ast-linters-server": ">=0.3.4 <1"
   }
 }

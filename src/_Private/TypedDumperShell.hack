@@ -2,6 +2,7 @@
 namespace HTL\ExprDump\_Private;
 
 use namespace HTL\ExprDump;
+use type HH\Lib\Ref;
 
 final class TypedDumperShell<T> implements ExprDump\Dumper<T> {
   /**

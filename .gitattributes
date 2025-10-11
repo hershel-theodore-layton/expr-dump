@@ -2,8 +2,6 @@
 tests/ export-ignore
 .hhconfig export-ignore
 .hhvmconfig.hdf export-ignore
-composer.dev.json export-ignore
-composer.4.102.json export-ignore
 .dockerignore export-ignore
 docker-compose.yml export-ignore
 Dockerfile export-ignore

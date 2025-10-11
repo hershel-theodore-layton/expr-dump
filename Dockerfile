@@ -1,5 +1,4 @@
 FROM hersheltheodorelayton/hhvm-full:25.7.0
-ENV COMPOSER=composer.dev.json
 
 WORKDIR /mnt/project
 

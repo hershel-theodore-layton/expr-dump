@@ -3,6 +3,7 @@ namespace HTL\ExprDump;
 
 use namespace HH\Lib\Dict;
 use namespace HTL\TypeVisitor;
+use type HH\Lib\Ref;
 
 function create_dumper<reify T>(DumpOptions $options)[]: Dumper<T> {
   $dumper_to_use_for_untyped_values = TypeVisitor\visit<mixed, _, _>(
@@ -25,6 +26,6 @@ function create_dumper<reify T>(DumpOptions $options)[]: Dumper<T> {
   ))
     |> new _Private\TypedDumperShell(
       $$,
-      new _Private\Ref($dumper_to_use_for_untyped_values),
+      new Ref($dumper_to_use_for_untyped_values),
     );
 }
