@@ -14,7 +14,7 @@ final class ShapeDumper implements UntypedDumper {
   )[] {}
 
   public function dump(mixed $value)[]: string {
-    $create_key = $k ==> {
+    $create_key = (arraykey $k) ==> {
       $name = ($this->shapeKeyNamer)($this->parentShapeName, $k);
 
       if ($name is string || $k is string) {
