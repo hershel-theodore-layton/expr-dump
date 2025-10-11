@@ -35,3 +35,4 @@ jobs:
           hhvm_flags: ${{ startsWith(matrix.hhvm, '4') && '-dhhvm.autoload.enabled=true -dhhvm.autoload.db.path=.var/facts.db' || '' }}
           lint_engine: pha
           test_engine: test-chain
+          typecheck_engine: hh_server
