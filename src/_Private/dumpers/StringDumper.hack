@@ -7,6 +7,6 @@ final class StringDumper implements UntypedDumper {
   use BecomeAStrongRef, SingletonDumper;
 
   public function dump(mixed $value)[]: string {
-    return var_export_pure($value as string);
+    return var_export_pure($value as string) as string;
   }
 }
