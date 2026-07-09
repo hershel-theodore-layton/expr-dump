@@ -6,10 +6,15 @@ use namespace HTL\TestChain;
 
 // The initial stub was generated with vendor/bin/test-chain.
 // It is now yours to edit and customize.
-<<__DynamicallyCallable, __EntryPoint>>
-async function run_tests_async()[defaults]: Awaitable<void> {
+final class Invoker implements TestChain\Invoker {
+  public async function invokeAsync()[defaults]: Awaitable<void> {
+    await invoke_tests_async();
+  }
+}
+
+async function invoke_tests_async()[defaults]: Awaitable<void> {
   $tests = await tests_async(
-    TestChain\ChainController::create(TestChain\TestChain::create<>)
+    TestChain\ChainController::create(TestChain\TestChain::create<>),
   );
   $result = await $tests
     ->withParallelGroupExecution()
