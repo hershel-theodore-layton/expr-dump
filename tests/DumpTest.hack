@@ -57,7 +57,7 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
             ']',
           ),
 
-          // You are able to intercept your type aliasses.
+          // You are able to intercept your type aliases.
           create_test_case<dict<int, MyOpaqueInt>>(
             $options,
             dict[1 => opaque_int(1)],
@@ -219,8 +219,8 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         // The WeakUntypedDumper can now be cleaned up, since it looks like the
         // TypedDumper has gone out of scope.
         // If I now call `->dump()` again, the WeakUntypedDumper throws, noting that
-        // it expected to the WeakRef to still be alive for as long as it is reachable.
-        // This should never happen, expect for when you mess in the internals.
+        // it expected the WeakRef to still be alive for as long as it is reachable.
+        // This should never happen, except for when you mess in the internals.
         $dumper->dropTheReferenceToTheDumperForUntypedValues__DO_NOT_USE();
         expect_invoked(
           () ==> $dumper->dumpUntypedForUnitTest__DO_NOT_USE($value),

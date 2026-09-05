@@ -65,7 +65,7 @@ ExprDump\dump<mixed>($x);
 
 // There are multiple options that can be combined in any way.
 
-// Encode Hack types and aliasses how you please.
+// Encode Hack types and aliases how you please.
 // \App\user_id_from_int(4) types the value as an App\UserId.
 ExprDump\dump<vec<shape('name' => string, 'friends' => vec<App\UserId>)>>(
   $users,
@@ -110,20 +110,20 @@ $dumper = ExprDump\create_dumper<SomeType>(shape(
 $dumper->dump($value_of_that_given_type);
 ```
 
-## Note about the stability of this api
+## Note about the stability of this API
 
-This library depends on [HTL\TypeVisitor](https://github.com/herhsel-theodore-layton/type-visitor)
-to provide its functionality. `TypeVisitor` depends on unstable Hack apis,
+This library depends on [HTL\TypeVisitor](https://github.com/hershel-theodore-layton/type-visitor)
+to provide its functionality. `TypeVisitor` depends on unstable Hack APIs,
 `TypeStructure<T>` and `\HH\ReifiedGenerics\get_type_structure<T>()`. For more
 details, see [stability](https://github.com/hershel-theodore-layton/type-visitor/blob/master/README.md).
-This api has been unstable since 2016, so take this with a grain of salt.
+This API has been unstable since 2016, so take this with a grain of salt.
 
-In order to minimize the potential impact of a removal of these apis, you should
+In order to minimize the potential impact of a removal of these APIs, you should
 not use this library in places where the performance of bootstrapping the dumper
 is critical. A far less performant variant of `TypeVisitor` could be written, even
-without these api affordances.
+without these API affordances.
 
-[^1]: This snippet `burn_a_value_to_constant` is excempt from the MIT license
+[^1]: This snippet `burn_a_value_to_constant` is exempt from the MIT license
 of this library. It is licensed to you under MIT-0 (MIT No Attribution).
-This excemption does not apply to the code called by this snippet. The MIT
+This exemption does not apply to the code called by this snippet. The MIT
 license still covers all other parts of this program.

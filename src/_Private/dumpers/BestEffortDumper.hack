@@ -6,7 +6,7 @@ final class BestEffortDumper implements UntypedDumper {
   // Now that they are nullable, `$this` is considered to be fully constructed,
   // before assigning them to `$this->dictDumper` etc.
   // They will become nonnull after the constructor finishes.
-  // If they were notnullable, `$dict_factory($this)` would not typecheck.
+  // If they were not nullable, `$dict_factory($this)` would not typecheck.
   // The initialization is not over because $this->dictDumper,
   // can still potentially be null. Hack(3004)
   private ?UntypedDumper $dictDumper;
