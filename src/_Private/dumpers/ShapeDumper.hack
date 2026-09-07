@@ -2,6 +2,7 @@
 namespace HTL\ExprDump\_Private;
 
 use namespace HH\Lib\{Str, Vec};
+use type UnexpectedValueException;
 
 final class ShapeDumper implements UntypedDumper {
   use BecomeAStrongRef;
@@ -21,7 +22,7 @@ final class ShapeDumper implements UntypedDumper {
         return $name ?? $this->inner->dump($k);
       }
 
-      throw new \UnexpectedValueException(Str\format(
+      throw new UnexpectedValueException(Str\format(
         'The key %d in shape() [%s] has type int '.
         'and the shape namer did not resolve to a class constant. '.
         'Raw integer field names are not allowed in Hack. '.

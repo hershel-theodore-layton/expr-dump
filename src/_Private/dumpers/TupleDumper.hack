@@ -2,6 +2,7 @@
 namespace HTL\ExprDump\_Private;
 
 use namespace HH\Lib\{C, Str, Vec};
+use type TypeAssertionException;
 
 final class TupleDumper implements UntypedDumper {
   use BecomeAStrongRef;
@@ -15,7 +16,7 @@ final class TupleDumper implements UntypedDumper {
     $element_count = C\count($this->elements);
 
     if ($value_count !== $element_count) {
-      throw new \TypeAssertionException(
+      throw new TypeAssertionException(
         'Expected tuple of length %d, got a vec<_> of length %d.',
       );
     }

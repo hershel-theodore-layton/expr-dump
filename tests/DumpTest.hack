@@ -4,7 +4,9 @@ namespace HTL\ExprDump\Tests;
 use namespace HH\Lib\Str;
 use namespace HTL\{ExprDump, TestChain};
 use namespace HTL\ExprDump\_Private;
+use type UnexpectedValueException, stdClass;
 use function HTL\Expect\{expect, expect_invoked};
+use const INF, NAN;
 
 <<TestChain\Discover>>
 function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
@@ -43,7 +45,7 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
           // Everybody loves the special float values...
           create_test_case<vec<float>>(
             $options,
-            vec[\INF, -\INF, \NAN],
+            vec[INF, -INF, NAN],
             'vec[\INF, -\INF, \NAN]',
           ),
 
@@ -156,13 +158,13 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
     )
     ->test('test_enum_not_provided', () ==> {
       expect_invoked(() ==> ExprDump\create_dumper<MyEnum>(shape()))
-        ->toHaveThrown<\UnexpectedValueException>(
+        ->toHaveThrown<UnexpectedValueException>(
           'Missing enum definition for: HTL\\ExprDump\\Tests\\MyEnum',
         );
     })
     ->test('test_newtype_not_provided', () ==> {
       expect_invoked(() ==> ExprDump\create_dumper<MyOpaqueInt>(shape()))
-        ->toHaveThrown<\UnexpectedValueException>(
+        ->toHaveThrown<UnexpectedValueException>(
           'Missing custom dumper for: HTL\\ExprDump\\Tests\\MyOpaqueInt',
         );
     })
@@ -170,7 +172,7 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
       expect_invoked(
         () ==> ExprDump\dump<shape(...)>(shape(MyClass::SOME_CONSTANT => 3)),
       )
-        ->toHaveThrown<\UnexpectedValueException>(
+        ->toHaveThrown<UnexpectedValueException>(
           'The key 1 in shape() [<unnamed-shape>] has type int '.
           'and the shape namer did not resolve to a class constant.',
         );
@@ -178,7 +180,7 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
       expect_invoked(
         () ==> ExprDump\dump<OpenShape>(shape(MyClass::SOME_CONSTANT => 3)),
       )
-        ->toHaveThrown<\UnexpectedValueException>(
+        ->toHaveThrown<UnexpectedValueException>(
           'The key 1 in shape() [HTL\\ExprDump\\Tests\\OpenShape] has type int '.
           'and the shape namer did not resolve to a class constant.',
         );
@@ -188,8 +190,8 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         ->toEqual("shape('str' => 3)");
     })
     ->test('test_undumpable_values_throw_an_exception', () ==> {
-      expect_invoked(() ==> ExprDump\dump<vec<mixed>>(vec[new \stdClass()]))
-        ->toHaveThrown<\UnexpectedValueException>(
+      expect_invoked(() ==> ExprDump\dump<vec<mixed>>(vec[new stdClass()]))
+        ->toHaveThrown<UnexpectedValueException>(
           'Unable to dump type without specific instructions: stdClass',
         );
     })

@@ -1,6 +1,9 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\_Private;
 
+use type UnexpectedValueException;
+use function get_class, gettype, is_object;
+
 final class BestEffortDumper implements UntypedDumper {
   // These fields are nullable, since they require `$this` to be constructed.
   // Now that they are nullable, `$this` is considered to be fully constructed,
@@ -47,9 +50,9 @@ final class BestEffortDumper implements UntypedDumper {
       return $this->vecDumper as nonnull->dump($value);
     }
 
-    throw new \UnexpectedValueException(
+    throw new UnexpectedValueException(
       'Unable to dump type without specific instructions: '.
-      (\is_object($value) ? \get_class($value) : \gettype($value)),
+      (is_object($value) ? get_class($value) : gettype($value)),
     );
   }
 

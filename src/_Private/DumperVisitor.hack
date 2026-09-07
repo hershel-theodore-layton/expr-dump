@@ -3,6 +3,7 @@ namespace HTL\ExprDump\_Private;
 
 use namespace HH\Lib\{Dict, Vec};
 use namespace HTL\{ExprDump, TypeVisitor};
+use type UnexpectedValueException;
 
 final class DumperVisitor
   implements TypeVisitor\TypeDeclVisitor<UntypedDumper, ShapeField> {
@@ -23,11 +24,11 @@ final class DumperVisitor
   )[] {}
 
   public function panic(string $message)[]: nothing {
-    throw new \UnexpectedValueException($message);
+    throw new UnexpectedValueException($message);
   }
 
   public function unsupportedType(string $type_name)[]: nothing {
-    throw new \UnexpectedValueException('Unsupported type: '.$type_name);
+    throw new UnexpectedValueException('Unsupported type: '.$type_name);
   }
 
   public function shapeField(
@@ -93,7 +94,7 @@ final class DumperVisitor
     $enum_definition = idx($this->enumDefinitions, $classname);
 
     if ($enum_definition is null) {
-      throw new \UnexpectedValueException(
+      throw new UnexpectedValueException(
         'Missing enum definition for: '.$classname,
       );
     }
@@ -253,7 +254,7 @@ final class DumperVisitor
     }
 
     if ($alias['opaque']) {
-      throw new \UnexpectedValueException(
+      throw new UnexpectedValueException(
         'Missing custom dumper for: '.($alias['alias'] as string),
       );
     }
@@ -271,6 +272,6 @@ final class DumperVisitor
       return $dumper;
     }
 
-    throw new \UnexpectedValueException('Unable to dump type: '.$type);
+    throw new UnexpectedValueException('Unable to dump type: '.$type);
   }
 }
