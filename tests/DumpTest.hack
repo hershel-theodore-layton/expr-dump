@@ -67,8 +67,8 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
           -1.7976931348623157E+308,
         ),
         tuple('4340000000000000', '9.0071992547409920E+15', 9.0071992547409920E+15),
-        tuple('7ff0000000000000', '\INF', \INF),
-        tuple('fff0000000000000', '-\INF', -\INF),
+        tuple('7ff0000000000000', '\INF', INF),
+        tuple('fff0000000000000', '-\INF', -INF),
       ],
       ($bits, $expression, $literal) ==> {
         $value = unpack('E', hex2bin($bits) as string)[1] as float;
