@@ -81,7 +81,9 @@ ExprDump\dump<vec<shape('name' => string, 'friends' => vec<App\UserId>)>>(
 ExprDump\dump<vec<Roles>>(
   $roles,
   shape(
-    'enum_definitions' => ExprDump\EnumDefinition::create(Roles::class),
+    'enum_definitions' => vec[
+      ExprDump\EnumDefinition::create(Roles::class),
+    ],
   ),
 );
 
