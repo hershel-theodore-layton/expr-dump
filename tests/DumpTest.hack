@@ -71,11 +71,13 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         tuple('fff0000000000000', '-\INF', -INF),
       ],
       ($bits, $expression, $literal) ==> {
-        $value = unpack('E', hex2bin($bits) as string)[1] as float;
+        $bytes = reorder_double_bytes(hex2bin($bits) as string);
+        $value = unpack('d', $bytes)[1] as float;
         expect(ExprDump\dump<float>($value))->toEqual($expression);
         expect(ExprDump\dump<num>($value))->toEqual($expression);
         expect(ExprDump\dump<mixed>($value))->toEqual($expression);
-        expect(bin2hex(pack('E', $literal) as string))->toEqual($bits);
+        $bytes = reorder_double_bytes(pack('d', $literal) as string);
+        expect(bin2hex($bytes))->toEqual($bits);
       },
     )
     ->testWith2Params(
@@ -87,7 +89,8 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         tuple('7ff0000000000001', '\NAN'),
       ],
       ($bits, $expected) ==> {
-        $value = unpack('E', hex2bin($bits) as string)[1] as float;
+        $bytes = reorder_double_bytes(hex2bin($bits) as string);
+        $value = unpack('d', $bytes)[1] as float;
         expect(is_nan($value))->toEqual(true);
         expect(ExprDump\dump<float>($value))->toEqual($expected);
       },
@@ -292,6 +295,13 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         );
       },
     );
+}
+
+// Convert between big-endian fixture bytes and native double byte order.
+function reorder_double_bytes(string $bytes)[]: string {
+  return bin2hex(pack('d', 1.0) as string) === '3ff0000000000000'
+    ? $bytes
+    : Str\reverse($bytes);
 }
 
 function create_test_case<reify T>(
