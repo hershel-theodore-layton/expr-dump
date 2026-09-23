@@ -6,6 +6,7 @@ use namespace HTL\{ExprDump, TestChain};
 use namespace HTL\ExprDump\_Private;
 use type UnexpectedValueException, stdClass;
 use function HTL\Expect\{expect, expect_invoked};
+use function bin2hex, hex2bin, is_nan, pack, unpack;
 use const INF, NAN;
 
 <<TestChain\Discover>>
@@ -31,6 +32,66 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
   );
 
   return $chain->group(__FUNCTION__)
+    ->testWith3Params(
+      'test_float_expressions_preserve_bits',
+      () ==> vec[
+        tuple('0000000000000000', '0.0', 0.0),
+        tuple('8000000000000000', '(-1.0 * 0.0)', (-1.0 * 0.0)),
+        tuple('3ff0000000000000', '1.0', 1.0),
+        tuple('bff0000000000000', '-1.0', -1.0),
+        tuple('400199999999999a', '2.2', 2.2),
+        tuple('3fb999999999999a', '0.1', 0.1),
+        tuple('3ff3c0ca428c59fb', '1.2345678901234567', 1.2345678901234567),
+        tuple('3ff0000000000001', '1.0000000000000002', 1.0000000000000002),
+        tuple('3fefffffffffffff', '9.9999999999999989E-1', 9.9999999999999989E-1),
+        tuple('0000000000000001', '4.9406564584125E-324', 4.9406564584125E-324),
+        tuple('8000000000000001', '-4.9406564584125E-324', -4.9406564584125E-324),
+        tuple(
+          '000fffffffffffff',
+          '2.2250738585072009E-308',
+          2.2250738585072009E-308,
+        ),
+        tuple(
+          '0010000000000000',
+          '2.2250738585072014E-308',
+          2.2250738585072014E-308,
+        ),
+        tuple(
+          '7fefffffffffffff',
+          '1.7976931348623157E+308',
+          1.7976931348623157E+308,
+        ),
+        tuple(
+          'ffefffffffffffff',
+          '-1.7976931348623157E+308',
+          -1.7976931348623157E+308,
+        ),
+        tuple('4340000000000000', '9.0071992547409920E+15', 9.0071992547409920E+15),
+        tuple('7ff0000000000000', '\INF', \INF),
+        tuple('fff0000000000000', '-\INF', -\INF),
+      ],
+      ($bits, $expression, $literal) ==> {
+        $value = unpack('E', hex2bin($bits) as string)[1] as float;
+        expect(ExprDump\dump<float>($value))->toEqual($expression);
+        expect(ExprDump\dump<num>($value))->toEqual($expression);
+        expect(ExprDump\dump<mixed>($value))->toEqual($expression);
+        expect(bin2hex(pack('E', $literal) as string))->toEqual($bits);
+      },
+    )
+    ->testWith2Params(
+      'test_nan_values_are_emitted_as_nan',
+      () ==> vec[
+        tuple('7ff8000000000000', '\NAN'),
+        tuple('7ff8000000000001', '\NAN'),
+        tuple('fff8000000000000', '\NAN'),
+        tuple('7ff0000000000001', '\NAN'),
+      ],
+      ($bits, $expected) ==> {
+        $value = unpack('E', hex2bin($bits) as string)[1] as float;
+        expect(is_nan($value))->toEqual(true);
+        expect(ExprDump\dump<float>($value))->toEqual($expected);
+      },
+    )
     ->testWith3Params(
       'test_the_cases',
       () ==>
