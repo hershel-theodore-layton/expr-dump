@@ -1,7 +1,7 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\Tests;
 
-use namespace HH\Lib\Str;
+use namespace HH\Lib\{Math, Str};
 use namespace HTL\{ExprDump, TestChain};
 use namespace HTL\ExprDump\_Private;
 use type UnexpectedValueException, stdClass;
@@ -32,6 +32,27 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
   );
 
   return $chain->group(__FUNCTION__)
+    ->testWith2Params(
+      'test_integer_boundaries',
+      () ==> vec[
+        tuple(Math\INT64_MIN, '(-1 << 63)'),
+        tuple(Math\INT64_MIN + 1, '-9223372036854775807'),
+        tuple(Math\INT64_MAX, '9223372036854775807'),
+        tuple(0, '0'),
+      ],
+      ($value, $expression) ==> {
+        expect(ExprDump\dump<int>($value))->toEqual($expression);
+        expect(ExprDump\dump<num>($value))->toEqual($expression);
+        expect(ExprDump\dump<arraykey>($value))->toEqual($expression);
+        expect(ExprDump\dump<mixed>($value))->toEqual($expression);
+        expect(ExprDump\dump<dict<int, vec<int>>>(dict[$value => vec[$value]]))
+          ->toEqual('dict['.$expression.' => vec['.$expression.']]');
+        expect(ExprDump\dump<mixed>(dict[$value => vec[$value]]))
+          ->toEqual('dict['.$expression.' => vec['.$expression.']]');
+        expect(ExprDump\dump<keyset<int>>(keyset[$value]))
+          ->toEqual('keyset['.$expression.']');
+      },
+    )
     ->testWith3Params(
       'test_float_expressions_preserve_bits',
       () ==> vec[
