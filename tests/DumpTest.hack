@@ -4,7 +4,7 @@ namespace HTL\ExprDump\Tests;
 use namespace HH\Lib\{Math, Str};
 use namespace HTL\{ExprDump, HH4Shim, TestChain};
 use namespace HTL\ExprDump\_Private;
-use type UnexpectedValueException, stdClass;
+use type TypeAssertionException, UnexpectedValueException, stdClass;
 use function HTL\Expect\{expect, expect_invoked};
 use function bin2hex, hex2bin, is_nan, pack, unpack;
 use const INF, NAN;
@@ -243,6 +243,26 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
           $dumper->dumpUntypedForUnitTest__DO_NOT_USE($value)
             |> Str\replace($$, "\n", ''),
         )->toEqual($expected);
+      },
+    )
+    ->testWith2Params(
+      'test_tuple_length_errors',
+      () ==> vec[
+        tuple(vec[], 0),
+        tuple(vec[1], 1),
+        tuple(vec[1, 2, 3], 3),
+      ],
+      ($value, $actual_length) ==> {
+        $dumper = ExprDump\create_dumper<(int, int)>(shape());
+        $dumper as _Private\TypedDumperShell<_>;
+        expect_invoked(
+          () ==> $dumper->dumpUntypedForUnitTest__DO_NOT_USE($value),
+        )->toHaveThrown<TypeAssertionException>(
+          Str\format(
+            'Expected tuple of length 2, got a vec<_> of length %d.',
+            $actual_length,
+          ),
+        );
       },
     )
     ->test('test_enum_not_provided', () ==> {

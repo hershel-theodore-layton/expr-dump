@@ -17,7 +17,11 @@ final class TupleDumper implements UntypedDumper {
 
     if ($value_count !== $element_count) {
       throw new TypeAssertionException(
-        'Expected tuple of length %d, got a vec<_> of length %d.',
+        Str\format(
+          'Expected tuple of length %d, got a vec<_> of length %d.',
+          $element_count,
+          $value_count,
+        ),
       );
     }
 
