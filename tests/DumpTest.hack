@@ -2,7 +2,7 @@
 namespace HTL\ExprDump\Tests;
 
 use namespace HH\Lib\{Math, Str};
-use namespace HTL\{ExprDump, TestChain};
+use namespace HTL\{ExprDump, HH4Shim, TestChain};
 use namespace HTL\ExprDump\_Private;
 use type UnexpectedValueException, stdClass;
 use function HTL\Expect\{expect, expect_invoked};
@@ -93,7 +93,9 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
       ],
       ($bits, $expression, $literal) ==> {
         $bytes = reorder_double_bytes(hex2bin($bits) as string);
-        $value = unpack('d', $bytes)[1] as float;
+        $value = unpack('d', $bytes)
+          |> HH4Shim\to_mixed($$) as dict<_, _>
+          |> $$[1] as float;
         expect(ExprDump\dump<float>($value))->toEqual($expression);
         expect(ExprDump\dump<num>($value))->toEqual($expression);
         expect(ExprDump\dump<mixed>($value))->toEqual($expression);
@@ -111,7 +113,9 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
       ],
       ($bits, $expected) ==> {
         $bytes = reorder_double_bytes(hex2bin($bits) as string);
-        $value = unpack('d', $bytes)[1] as float;
+        $value = unpack('d', $bytes)
+          |> HH4Shim\to_mixed($$) as dict<_, _>
+          |> $$[1] as float;
         expect(is_nan($value))->toEqual(true);
         expect(ExprDump\dump<float>($value))->toEqual($expected);
       },

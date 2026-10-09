@@ -10,6 +10,7 @@
     "hershel-theodore-layton/test-chain": "<1",
     "hershel-theodore-layton/expect": "<1",
     "hershel-theodore-layton/portable-hack-ast-linters-server": ">=0.5.4 <1",
-    "hershel-theodore-layton/pragma": "<1"
+    "hershel-theodore-layton/pragma": "<1",
+    "hershel-theodore-layton/hhvm-four-shim": "<1"
   }
 }
