@@ -28,7 +28,7 @@ jobs:
           - "beta"
     runs-on: ubuntu-24.04
     container:
-      image: ${{ startsWith(matrix.hhvm, '4') && format('hhvm/hhvm:{0}-latest', matrix.hhvm) || format('hersheltheodorelayton/hhvm-full:{0}', matrix.hhvm) }}
+      image: ${{ startsWith(matrix.hhvm, '4') && format('hhvm/hhvm:{0}-latest', matrix.hhvm) || matrix.hhvm == 'beta' && 'hersheltheodorelayton/hhvm-full:beta' || format('ghcr.io/hershel-theodore-layton/hhvm-images/hhvm-full:{0}', matrix.hhvm) }}
     steps:
       - uses: actions/checkout@v7
       - name: Create branch for version alias
