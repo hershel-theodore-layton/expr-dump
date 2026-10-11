@@ -5,4 +5,4 @@ WORKDIR /mnt/project
 COPY . .
 COPY .hhconfig /etc/hh.conf
 CMD composer update && \
-    vendor/bin/pha-linters-server.sh -s -g -e
+    vendor/bin/pha-linters-server.sh -s -e
