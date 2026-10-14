@@ -1,7 +1,7 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\Tests;
 
-use namespace HH\Lib\{Math, Str};
+use namespace HH\Lib\{Math, Str, Vec};
 use namespace HTL\{ExprDump, HH4Shim, TestChain};
 use namespace HTL\ExprDump\_Private;
 use type TypeAssertionException, UnexpectedValueException, stdClass;
@@ -243,6 +243,71 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
           $dumper->dumpUntypedForUnitTest__DO_NOT_USE($value)
             |> Str\replace($$, "\n", ''),
         )->toEqual($expected);
+      },
+    )
+    ->testWith2Params(
+      'test_vec_or_dict_shorthand',
+      () ==> vec[
+        tuple(vec[], 'vec[]'),
+        tuple(vec[1, 2], 'vec[1, 2]'),
+        tuple(dict[], 'dict[]'),
+        tuple(dict[3 => 4, 'key' => 5], "dict[3 => 4, 'key' => 5]"),
+      ],
+      ($value, $expected) ==> {
+        $short = ExprDump\create_dumper<vec_or_dict<int>>(shape());
+        $explicit = ExprDump\create_dumper<vec_or_dict<arraykey, int>>(shape());
+        expect(Str\replace($short->dump($value), "\n", ''))
+          ->toEqual($expected);
+        expect(Str\replace($explicit->dump($value), "\n", ''))
+          ->toEqual($expected);
+        expect(Str\replace($short->dump($value), "\n", ''))
+          ->toEqual($expected);
+        expect(
+          ExprDump\dump<vec<vec_or_dict<int>>>(vec[$value])
+            |> Str\replace($$, "\n", ''),
+        )
+          ->toEqual('vec['.$expected.']');
+      },
+    )
+    ->test('test_vec_or_dict_custom_dumpers', () ==> {
+      $options = shape(
+        'custom_dumpers' => dict[
+          'arraykey' => ($_)[] ==> "'custom_key'",
+          'int' => ($_)[] ==> '42',
+        ],
+      );
+      expect(ExprDump\dump<vec_or_dict<int>>(dict['key' => 1], $options))
+        ->toEqual("dict['custom_key' => 42]");
+      expect(ExprDump\dump<vec_or_dict<arraykey, int>>(
+        dict['key' => 1],
+        $options,
+      ))->toEqual("dict['custom_key' => 42]");
+      expect(ExprDump\dump<vec_or_dict<int>>(vec[1], $options))
+        ->toEqual('vec[42]');
+      expect(ExprDump\dump<vec_or_dict<arraykey, int>>(vec[1], $options))
+        ->toEqual('vec[42]');
+      expect(ExprDump\dump<vec_or_dict<int>>(
+        dict['key' => 1],
+        shape('custom_dumpers' => dict['vec_or_dict' => ($_)[] ==> 'dict[]']),
+      ))->toEqual('dict[]');
+    })
+    ->testWith2Params(
+      'test_vec_or_dict_rejects_unsupported_arities',
+      () ==> vec[tuple(vec[], 0), tuple(vec[1, 2, 3], 3)],
+      ($arguments, $count) ==> {
+        $visitor = new _Private\DumperVisitor(
+          dict[],
+          null,
+          dict[],
+          ($_, $_)[] ==> null,
+        );
+        $inner = Vec\map($arguments, $_ ==> _Private\IntDumper::instance());
+        expect_invoked(
+          () ==> $visitor->vecOrDict(_Private\DumperVisitor::EMPTY_ALIAS, $inner),
+        )->toHaveThrown<UnexpectedValueException>(Str\format(
+          'Expected one or two vec_or_dict type arguments, got %d.',
+          $count,
+        ));
       },
     )
     ->testWith2Params(

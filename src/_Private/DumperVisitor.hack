@@ -1,7 +1,7 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\_Private;
 
-use namespace HH\Lib\{Dict, Vec};
+use namespace HH\Lib\{C, Dict, Str, Vec};
 use namespace HTL\{ExprDump, TypeVisitor};
 use type UnexpectedValueException;
 
@@ -228,14 +228,28 @@ final class DumperVisitor
     TypeVisitor\TAlias $alias,
     vec<UntypedDumper> $inner,
   )[]: UntypedDumper {
-    return $this->customDumperOrNull($alias, 'vec_or_dict') ??
-      new VecOrDictDumper(
-        new VecDumper(WeakUntypedDumper::create($inner[1])),
-        new DictDumper(
-          WeakUntypedDumper::create($inner[0]),
-          WeakUntypedDumper::create($inner[1]),
-        ),
-      );
+    $custom = $this->customDumperOrNull($alias, 'vec_or_dict');
+    if ($custom is nonnull) {
+      return $custom;
+    }
+
+    $count = C\count($inner);
+    if ($count !== 1 && $count !== 2) {
+      return $this->panic(Str\format(
+        'Expected one or two vec_or_dict type arguments, got %d.',
+        $count,
+      ));
+    }
+
+    $key = $count === 1 ? $this->arraykey(static::EMPTY_ALIAS) : $inner[0];
+    $value = $inner[$count - 1];
+    return new VecOrDictDumper(
+      new VecDumper(WeakUntypedDumper::create($value)),
+      new DictDumper(
+        WeakUntypedDumper::create($key),
+        WeakUntypedDumper::create($value),
+      ),
+    );
   }
 
   public function void(TypeVisitor\TAlias $alias)[]: UntypedDumper {
