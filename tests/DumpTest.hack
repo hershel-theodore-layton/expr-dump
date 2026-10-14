@@ -31,9 +31,6 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
     },
   );
 
-  $short = ExprDump\create_dumper<vec_or_dict<int>>(shape());
-  $explicit = ExprDump\create_dumper<vec_or_dict<arraykey, int>>(shape());
-
   return $chain->group(__FUNCTION__)
     ->testWith2Params(
       'test_integer_boundaries',
@@ -257,6 +254,8 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         tuple(dict[3 => 4, 'key' => 5], "dict[3 => 4, 'key' => 5]"),
       ],
       ($value, $expected) ==> {
+        $short = ExprDump\create_dumper<vec_or_dict<int>>(shape());
+        $explicit = ExprDump\create_dumper<vec_or_dict<arraykey, int>>(shape());
         expect(Str\replace($short->dump($value), "\n", ''))
           ->toEqual($expected);
         expect(Str\replace($explicit->dump($value), "\n", ''))
