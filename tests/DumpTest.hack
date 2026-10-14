@@ -31,6 +31,9 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
     },
   );
 
+  $short = ExprDump\create_dumper<vec_or_dict<int>>(shape());
+  $explicit = ExprDump\create_dumper<vec_or_dict<arraykey, int>>(shape());
+
   return $chain->group(__FUNCTION__)
     ->testWith2Params(
       'test_integer_boundaries',
@@ -254,13 +257,9 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         tuple(dict[3 => 4, 'key' => 5], "dict[3 => 4, 'key' => 5]"),
       ],
       ($value, $expected) ==> {
-        $short = ExprDump\create_dumper<vec_or_dict<int>>(shape());
-        $explicit = ExprDump\create_dumper<vec_or_dict<arraykey, int>>(shape());
         expect(Str\replace($short->dump($value), "\n", ''))
           ->toEqual($expected);
         expect(Str\replace($explicit->dump($value), "\n", ''))
-          ->toEqual($expected);
-        expect(Str\replace($short->dump($value), "\n", ''))
           ->toEqual($expected);
         expect(
           ExprDump\dump<vec<vec_or_dict<int>>>(vec[$value])
@@ -288,13 +287,14 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         ->toEqual('vec[42]');
       expect(ExprDump\dump<vec_or_dict<int>>(
         dict['key' => 1],
-        shape('custom_dumpers' => dict['vec_or_dict' => ($_)[] ==> 'dict[]']),
-      ))->toEqual('dict[]');
+        shape('custom_dumpers' => dict['vec_or_dict' => ($_)[] ==> 'custom']),
+      ))->toEqual('custom');
     })
     ->testWith2Params(
       'test_vec_or_dict_rejects_unsupported_arities',
       () ==> vec[tuple(vec[], 0), tuple(vec[1, 2, 3], 3)],
       ($arguments, $count) ==> {
+        // Invalid arities cannot be spelled as public Hack types.
         $visitor = new _Private\DumperVisitor(
           dict[],
           null,
