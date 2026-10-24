@@ -6,8 +6,8 @@ use namespace HTL\{ExprDump, HH4Shim, TestChain};
 use namespace HTL\ExprDump\_Private;
 use type TypeAssertionException, UnexpectedValueException, stdClass;
 use function HTL\Expect\{expect, expect_invoked};
-use function bin2hex, hex2bin, is_nan, pack, unpack;
-use const INF, NAN;
+use function bin2hex, hex2bin, pack, unpack;
+use const INF;
 
 <<TestChain\Discover>>
 function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
@@ -116,7 +116,7 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
         $value = unpack('d', $bytes)
           |> HH4Shim\to_mixed($$) as dict<_, _>
           |> $$[1] as float;
-        expect(is_nan($value))->toEqual(true);
+        expect(Math\is_nan($value))->toEqual(true);
         expect(ExprDump\dump<float>($value))->toEqual($expected);
       },
     )
@@ -134,7 +134,7 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
           // Everybody loves the special float values...
           create_test_case<vec<float>>(
             $options,
-            vec[INF, -INF, NAN],
+            vec[INF, -INF, Math\NAN],
             'vec[\INF, -\INF, \NAN]',
           ),
 

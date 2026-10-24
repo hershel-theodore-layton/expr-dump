@@ -1,8 +1,7 @@
 /** expr-dump is MIT licensed, see /LICENSE. */
 namespace HTL\ExprDump\_Private;
 
-use namespace HH\Lib\Str;
-use function is_nan;
+use namespace HH\Lib\{Math, Str};
 use const INF;
 
 final class FloatDumper implements UntypedDumper {
@@ -11,7 +10,7 @@ final class FloatDumper implements UntypedDumper {
   public function dump(mixed $value)[]: string {
     $value as float;
 
-    if (is_nan($value)) {
+    if (Math\is_nan($value)) {
       return '\NAN';
     }
 
