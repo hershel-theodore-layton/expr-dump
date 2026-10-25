@@ -6,7 +6,7 @@ use namespace HTL\{ExprDump, HH4Shim, TestChain};
 use namespace HTL\ExprDump\_Private;
 use type TypeAssertionException, UnexpectedValueException, stdClass;
 use function HTL\Expect\{expect, expect_invoked};
-use function bin2hex, hex2bin, pack, unpack;
+use function bin2hex, hex2bin, pack, unpack, var_export_pure;
 use const INF;
 
 <<TestChain\Discover>>
@@ -265,6 +265,36 @@ function dump_test(TestChain\Chain $chain)[]: TestChain\Chain {
             |> Str\replace($$, "\n", ''),
         )
           ->toEqual('vec['.$expected.']');
+      },
+    )
+    ->testWith2Params(
+      'test_shape_keys_ignore_value_dumpers',
+      () ==> vec[
+        tuple('string', 'key'),
+        tuple('mixed', 'key'),
+        tuple('string', "quote'and\\slash"),
+        tuple('mixed', "quote'and\\slash"),
+      ],
+      ($type, $key) ==> {
+        $options = shape(
+          'custom_dumpers' => dict[
+            $type => ($_)[] ==> "str('value')",
+          ],
+        );
+        $value = shape('key' => 'value');
+        if ($key === 'key' && $type === 'string') {
+          $expression = ExprDump\dump<shape('key' => string /*_*/)>(
+            $value,
+            $options,
+          );
+        } else {
+          $expression = ExprDump\dump<shape(...)>(
+            dict[$key => 'value'] as shape(...),
+            $options,
+          );
+        }
+        $prefix = 'shape('.(var_export_pure($key) as string).' => ';
+        expect($expression)->toEqual($prefix."str('value'))");
       },
     )
     ->test('test_vec_or_dict_custom_dumpers', () ==> {

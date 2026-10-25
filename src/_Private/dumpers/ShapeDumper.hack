@@ -19,7 +19,7 @@ final class ShapeDumper implements UntypedDumper {
       $name = ($this->shapeKeyNamer)($this->parentShapeName, $k);
 
       if ($name is string || $k is string) {
-        return $name ?? $this->inner->dump($k);
+        return $name ?? StringDumper::instance()->dump($k);
       }
 
       throw new UnexpectedValueException(Str\format(
